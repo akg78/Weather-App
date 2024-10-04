@@ -1,9 +1,9 @@
 <template>
     <div class="main-container">
-        <input type="text" v-model="cityName" placeholder="Enter City" />
-        <button @click="getWeather">Get Data</button>
+        <input type="text" v-model="cityName" placeholder="Enter your city" />
+        <button @click="getWeather">Search</button>
 
-        <div v-if="weatherStore.loading">Loading...</div>
+        <div class="loading" v-if="weatherStore.loading">Loading...</div>
 
         <div class="wrap-data" v-if="weatherStore.weatherData">
             <div class="weather-location-block">
@@ -20,8 +20,6 @@
                             <p>{{ weatherStore.weatherData.current.condition.text }}</p>
                             <p>Feels like {{ weatherStore.weatherData.current.feelslike_c }} °C</p>
                         </div>
-
-
                     </div>
 
                     <div class="small-element">
@@ -52,13 +50,11 @@
                                 <p>{{ weatherStore.weatherData.current.pressure_mb }} mb</p>
                                 <p>Pressure</p>
                             </div>
-
-
                         </div>
                         <div class="current-atmos">
                             <div class="content-wrap">
                                 <p>{{ weatherStore.weatherData.current.uv }}</p>
-                                <p>Uv</p>
+                                <p>UV</p>
                             </div>
                             <div class="content-wrap">
                                 <p>{{ weatherStore.weatherData.current.vis_km }}%</p>
@@ -68,12 +64,15 @@
                                 <p>{{ weatherStore.weatherData.current.pressure_mb }} mb</p>
                                 <p>Pressure</p>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="no-data " v-else>
+            <img src="/src/assets/cat.png" alt="Search for cities" id="cat" />
+            <h1 class="wrap-data">Search for cities to get weather results.</h1>
         </div>
 
         <div v-if="weatherStore.error">
@@ -82,33 +81,29 @@
     </div>
 </template>
 
-
 <script setup>
 import { useWeatherStore } from '@/stores/weatherStore';
 import { ref } from 'vue';
 
-
 const weatherStore = useWeatherStore();
-const cityName = ref('')
-
+const cityName = ref('');
 
 const getWeather = () => {
     if (cityName.value.trim()) {
-        weatherStore.fetchWeather(cityName.value)
+        weatherStore.fetchWeather(cityName.value);
     }
-}
+};
 </script>
-
 
 <style lang="css" scoped>
 .main-container {
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
     height: 500px;
     width: 1000px;
-    /* border: 1px solid white; */
     margin-top: 40px;
+}
+
+.loading {
+    color: #ffff;
 }
 
 input {
@@ -129,6 +124,11 @@ button {
     cursor: pointer;
 }
 
+button:hover {
+    background-color: #092c51;
+    transition: 0.6s;
+}
+
 .wrap-data {
     color: #ffff;
 }
@@ -139,8 +139,8 @@ button {
     margin-top: 30px;
     height: 35px;
     text-align: center;
-
 }
+
 .small-container {
     display: flex;
     justify-content: space-between;
@@ -148,17 +148,16 @@ button {
     width: 100%;
     margin-top: 30px;
     border-radius: 10px;
-
+    border: 1px solid rgba(255, 255, 255, 0.164);
 }
 
 .wrap-temp {
     display: flex;
-    /* border: 1px solid white; */
 }
 
 .small-element {
     padding: 5px;
-    border-left: 1px solid white;
+    border-left: 1px solid rgba(255, 255, 255, 0.245);
 }
 
 img {
@@ -185,7 +184,6 @@ span {
     text-align: start;
     border-radius: 20px;
     background-color: #092c51;
-
     opacity: 95%;
 }
 
@@ -194,5 +192,15 @@ span {
     flex-direction: column;
     align-items: start;
     margin-top: 30px;
+}
+
+.no-data {
+    margin-top: 50px;
+}
+
+#cat {
+    height: 400px;
+    width: 500px;
+    border-radius: 50px;
 }
 </style>
